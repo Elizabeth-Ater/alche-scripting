@@ -13,7 +13,9 @@ def top_ten(subreddit):
     If not a valid subreddit, prints None.
     """
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-    headers = {"User-Agent": "python3:top.ten.checker:v1.0 (by /u/check)"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) top_ten_checker/1.0"
+    }
     params = {"limit": 10}
 
     response = requests.get(
