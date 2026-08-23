@@ -11,7 +11,7 @@ def top_ten(subreddit):
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
 
     headers = {
-        "User-Agent": "ALU-Reddit-API"
+        "User-Agent": "ALX"
     }
 
     response = requests.get(
@@ -24,8 +24,8 @@ def top_ten(subreddit):
         print("None")
         return
 
-    data = response.json()
-    posts = data.get("data", {}).get("children", [])
+    data = response.json().get("data", {})
+    posts = data.get("children", [])
 
     for post in posts[:10]:
         print(post.get("data", {}).get("title"))
