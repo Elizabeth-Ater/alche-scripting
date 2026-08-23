@@ -1,16 +1,24 @@
 #!/usr/bin/python3
 """
-Queries the Reddit API and prints the titles of the first 10 hot posts.
+Recursive function that queries the Reddit API.
 """
 
 import requests
 
 
-def top_ten(subreddit):
-    """Print the titles of the first 10 hot posts."""
+def recurse(subreddit, hot_list=None, after=None):
+    """Return a list containing the titles of all hot articles."""
+
+    if hot_list is None:
+        hot_list = []
+
     url = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+
+    if after:
+        url += "?after={}".format(after)
+
     headers = {
-        "User-Agent": "Mozilla/5.0"
+        "User-Agent": "ALU-Reddit-API"
     }
 
     response = requests.get(
@@ -20,11 +28,17 @@ def top_ten(subreddit):
     )
 
     if response.status_code != 200:
-        print("None")
-        return
+        return None
 
-    data = response.json()
-    posts = data.get("data", {}).get("children", [])
+    data = response.json().get("data", {})
+    posts = data.get("children", [])
 
-    for post in posts[:10]:
-        print(post.get("data", {}).get("title"))
+    for post in posts:
+        hot_list.append(post.get("data", {}).get("title"))
+
+    after = data.get("after")
+
+    if after is None:
+        return hot_list
+
+    return recurse(subreddit, hot_list, after)
